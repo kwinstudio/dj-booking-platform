@@ -6,6 +6,7 @@ on:
       - "kwinest/index.html"
       - "public/manifest.webmanifest"
       - "public/assets/financial-correction.js"
+      - "public/assets/document-review-v2.*"
       - "public/assets/developer-mode.js"
       - "public/assets/kvk-company-lookup.*"
       - "public/assets/mobile-polish-round-2.*"
@@ -27,6 +28,7 @@ on:
       - "tests/app-wide-premium-simplification-v2.test.mjs"
       - "tests/product-ui-reference.test.mjs"
       - "tests/document-upload-browser.test.mjs"
+      - "tests/document-review-beginner-ux.test.mjs"
       - "tests/scan-native-picker.test.mjs"
       - "tests/document-background-processing.test.mjs"
       - "tests/auth-progressive-onboarding.test.mjs"
@@ -97,6 +99,10 @@ jobs:
         run: npm install --prefix tests --no-save playwright@1.56.1
       - name: Install Chromium and WebKit
         run: ./tests/node_modules/.bin/playwright install --with-deps chromium webkit
+      - name: Beginner document review — Chromium + WebKit
+        run: |
+          node tests/document-review-beginner-ux.test.mjs
+          BOOKUNA_BROWSER=webkit node tests/document-review-beginner-ux.test.mjs
       - name: Mobile polish round 2 — Chromium and WebKit
         run: |
           node tests/mobile-polish-round-2.test.mjs

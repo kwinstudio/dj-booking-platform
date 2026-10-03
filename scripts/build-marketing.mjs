@@ -52,6 +52,8 @@ fs.rmSync(path.join(target,'manifest.webmanifest'),{force:true});
 for(const asset of [
   'mobile-polish-round-2.css',
   'mobile-polish-round-2.js',
+  'document-review-v2.css',
+  'document-review-v2.js',
   'marketing.css',
   'marketing-editorial.css',
   'marketing-editorial.js'

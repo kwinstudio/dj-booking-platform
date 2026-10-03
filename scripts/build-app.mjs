@@ -33,6 +33,8 @@ const appAssets=[
   'brand-v2.css',
   'favicon-32.png',
   'financial-correction.js',
+  'document-review-v2.js',
+  'document-review-v2.css',
   'kvk-company-lookup.js',
   'kvk-company-lookup.css',
   'mobile-polish-round-2.css',
@@ -165,6 +167,17 @@ for(const forbidden of ['showLanding(','function marketingNav','function showMar
 if(!appHtml.includes("else if(wantsRegister)showAuth('register');else showAuth('login');")){
   throw new Error('App-only auth fallback was not rewritten');
 }
+
+// App-only progressive document review layer. Keep the combined rollback source untouched.
+// This legacy source contains literal </head> and </body> strings inside templates,
+// so injection must target the final document closing tags, never the first match.
+function injectBeforeLast(html,marker,content){
+  const index=html.lastIndexOf(marker);
+  if(index<0)throw new Error('Missing app document marker: '+marker);
+  return html.slice(0,index)+content+html.slice(index);
+}
+appHtml=injectBeforeLast(appHtml,'</head>','<link rel="stylesheet" href="/assets/document-review-v2.css?v=20261003a">\n');
+appHtml=injectBeforeLast(appHtml,'</body>','<script src="/assets/document-review-v2.js?v=20261003a"></script>\n');
 
 fs.rmSync(target,{recursive:true,force:true});
 fs.mkdirSync(target,{recursive:true});
