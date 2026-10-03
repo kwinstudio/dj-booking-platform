@@ -2110,6 +2110,36 @@ img.bookuna-logo-icon,
   @media(max-width:1000px){#mainApp .product-kpis.grid-4{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
   @media(max-width:820px){#mainApp .product-kpis{gap:10px!important;margin-bottom:12px!important}#mainApp .product-kpi{min-height:118px!important;padding:14px!important}#mainApp .product-kpi .metric-value{font-size:26px!important}#mainApp .report-result-card .chart{height:180px!important}}
   @media(max-width:390px){#mainApp .product-kpis.grid-4{grid-template-columns:1fr!important}}
+
+  /* Focused table / report / desktop navigation polish */
+  #mainApp .financial-table th{white-space:nowrap!important;overflow-wrap:normal!important;word-break:normal!important}
+  #mainApp .financial-table tbody tr,#mainApp .financial-table tbody td{cursor:default}
+  #mainApp .financial-table .cell-nowrap{white-space:nowrap!important;overflow-wrap:normal!important;word-break:normal!important}
+  #mainApp .financial-table .cell-name{max-width:240px}
+  #mainApp .financial-table .cell-name>strong{display:block;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;overflow-wrap:normal!important;word-break:normal}
+  #mainApp .financial-table .financial-actions{width:56px;min-width:56px;white-space:nowrap!important}
+  #mainApp .bank-unlink-action{width:44px!important;height:44px!important;min-width:44px!important;padding:0!important;justify-content:center}
+  #mainApp .bank-unlink-text{display:none}
+  #mainApp .dashboard-chart-card,#mainApp .report-result-card{position:relative}
+  #mainApp .chart-values{background:var(--app-charcoal)!important;color:var(--app-white)!important;border-color:var(--app-charcoal)!important}
+  #mainApp .chart-values>span>span{color:var(--app-white)!important;opacity:.72}
+  #mainApp .chart button.bar-group{touch-action:pan-y pinch-zoom}
+  @media(min-width:821px){
+    #mainApp .sidebar .nav-group{display:none!important}
+    #mainApp .sidebar .nav-item[data-page="documents"]{margin-top:12px!important}
+  }
+  @media(min-width:1101px) and (max-width:1365px){
+    #mainApp .financial-table th,#mainApp .financial-table td{padding-left:10px!important;padding-right:10px!important}
+    #mainApp .financial-table .cell-name{max-width:200px}
+    #mainApp .financial-table .financial-actions{width:50px;min-width:50px}
+  }
+  @media(max-width:1100px){
+    #mainApp .financial-table .cell-name{max-width:none}
+    #mainApp .financial-table .cell-name>strong{white-space:normal;overflow:visible;text-overflow:clip;overflow-wrap:anywhere!important}
+    #mainApp .mobile-bank .bank-unlink-action{width:auto!important;min-width:44px!important;padding:0 12px!important;display:inline-flex!important;gap:0}
+    #mainApp .mobile-bank .bank-unlink-action .icon{display:none}
+    #mainApp .mobile-bank .bank-unlink-text{display:inline}
+  }
 </style>
 </head>
 <body>
@@ -2148,6 +2178,7 @@ if(location.hostname==='kwinest-boekhouding.onrender.com'){
 <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></symbol>
 <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></symbol>
 <symbol id="i-eye" viewBox="0 0 24 24"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></symbol><symbol id="i-trash" viewBox="0 0 24 24"><path d="M3 6h18M9 6V3h6v3M5 6l1 15h12l1-15M10 10v7M14 10v7"/></symbol><symbol id="i-more" viewBox="0 0 24 24"><circle cx="5" cy="12" r="1" fill="currentColor"/><circle cx="12" cy="12" r="1" fill="currentColor"/><circle cx="19" cy="12" r="1" fill="currentColor"/></symbol>
+<symbol id="i-unlink" viewBox="0 0 24 24"><path d="M9 8H7a4 4 0 0 0 0 8h2"/><path d="M15 8h2a4 4 0 0 1 0 8h-2"/><path d="M8 12h8"/><path d="m7 4 10 16"/></symbol>
 <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12 4 4L19 6"/></symbol>
 <symbol id="i-upload" viewBox="0 0 24 24"><path d="M12 16V4M7 9l5-5 5 5M4 20h16"/></symbol>
 <symbol id="i-download" viewBox="0 0 24 24"><path d="M12 4v12M7 11l5 5 5-5M4 20h16"/></symbol>
@@ -3550,7 +3581,7 @@ function renderInvoices(){
   productKpi('Concepten',String(drafts),drafts===1?'Nog afmaken':'Nog afmaken','i-file','neutral')
  ])}
  ${listToolbar('invoices')}
- <div class="card table-card workspace-table"><div class="table-wrap mobile-stack-wrap"><table class="table financial-table mobile-stack-table mobile-invoices"><thead><tr><th>Factuurnr.</th><th>Klant</th><th>Factuurdatum</th><th>Vervaldatum</th><th>Status</th><th class="right">Excl.</th><th class="right">Incl.</th><th></th></tr></thead><tbody>${list.length?list.map(i=>`<tr><td><button class="link-btn" onclick="viewInvoice('${i.id}')">${esc(i.number||'Concept')}</button><span class="financial-mobile-meta" aria-hidden="true"> · ${dateNL(i.issueDate)}</span></td><td><strong>${esc(getContact(i.customerId).name)}</strong></td><td>${dateNL(i.issueDate)}</td><td>${dateNL(i.dueDate)}</td><td>${statusBadge(invoiceEffectiveStatus(i))}</td><td class="right money">${money(invoiceNet(i))}</td><td class="right money">${money(invoiceGross(i))}</td><td class="right financial-actions"><button class="icon-btn" aria-label="Factuuracties" aria-haspopup="dialog" onclick="invoiceActions('${i.id}')">${icon('i-more')}</button></td></tr>`).join(''):`<tr><td colspan="8">${listEmptyHtml('invoices','<button class="btn primary" onclick="newInvoice()">Nieuwe factuur</button>')}</td></tr>`}</tbody></table></div></div>`
+ <div class="card table-card workspace-table"><div class="table-wrap mobile-stack-wrap"><table class="table financial-table mobile-stack-table mobile-invoices"><thead><tr><th>Factuurnr.</th><th>Klant</th><th>Factuurdatum</th><th>Vervaldatum</th><th>Status</th><th class="right">Excl.</th><th class="right">Incl.</th><th></th></tr></thead><tbody>${list.length?list.map(i=>`<tr><td class="cell-nowrap"><button class="link-btn" onclick="viewInvoice('${i.id}')">${esc(i.number||'Concept')}</button><span class="financial-mobile-meta" aria-hidden="true"> · ${dateNL(i.issueDate)}</span></td><td class="cell-name"><strong title="${esc(getContact(i.customerId).name)}">${esc(getContact(i.customerId).name)}</strong></td><td class="cell-nowrap">${dateNL(i.issueDate)}</td><td class="cell-nowrap">${dateNL(i.dueDate)}</td><td class="cell-nowrap">${statusBadge(invoiceEffectiveStatus(i))}</td><td class="right money cell-nowrap">${money(invoiceNet(i))}</td><td class="right money cell-nowrap">${money(invoiceGross(i))}</td><td class="right financial-actions cell-nowrap"><button class="icon-btn" aria-label="Factuuracties" aria-haspopup="dialog" onclick="invoiceActions('${i.id}')">${icon('i-more')}</button></td></tr>`).join(''):`<tr><td colspan="8">${listEmptyHtml('invoices','<button class="btn primary" onclick="newInvoice()">Nieuwe factuur</button>')}</td></tr>`}</tbody></table></div></div>`
 }
 function renderExpenses(){
  const list=getListRows('expenses'),monthKey=monthKeyOffset(0),month=state.expenses.filter(e=>String(e.date||'').startsWith(monthKey)),net=month.reduce((sum,e)=>roundMoney(sum+Number(e.exVat||0)),0),vat=month.reduce((sum,e)=>roundMoney(sum+expenseVat(e)),0),categoryTotals={};
@@ -3564,7 +3595,7 @@ function renderExpenses(){
   productKpi('Te controleren',String(review),review===1?'1 kost mist gegevens':review+' kosten missen gegevens','i-check',review?'warning':'success')
  ])}
  ${listToolbar('expenses')}
- <div class="card table-card workspace-table"><div class="table-wrap mobile-stack-wrap"><table class="table financial-table mobile-stack-table mobile-expenses"><thead><tr><th>Datum</th><th>Leverancier</th><th>Factuurnr.</th><th>Categorie</th><th>Betaalwijze</th><th>Btw</th><th class="right">Excl.</th><th class="right">Incl.</th><th></th></tr></thead><tbody>${list.length?list.map(e=>`<tr><td>${dateNL(e.date)}</td><td><strong>${esc(e.vendor)}</strong><div class="help">${esc(e.notes||'')}</div></td><td>${esc(e.invoiceNumber||'—')}</td><td>${esc(e.category)}</td><td>${esc(e.paymentMethod||'—')}</td><td>${esc(expenseVatRateLabel(e))}</td><td class="right money">${money(e.exVat)}</td><td class="right money">${money(expenseGross(e))}</td><td class="right financial-actions"><button class="icon-btn" aria-label="Kostenacties" aria-haspopup="dialog" onclick="expenseActions('${e.id}')">${icon('i-more')}</button></td></tr>`).join(''):`<tr><td colspan="9">${listEmptyHtml('expenses','<button class="btn primary" onclick="newExpense()">Kosten boeken</button>')}</td></tr>`}</tbody></table></div></div>`
+ <div class="card table-card workspace-table"><div class="table-wrap mobile-stack-wrap"><table class="table financial-table mobile-stack-table mobile-expenses"><thead><tr><th>Datum</th><th>Leverancier</th><th>Factuurnr.</th><th>Categorie</th><th>Betaalwijze</th><th>Btw</th><th class="right">Excl.</th><th class="right">Incl.</th><th></th></tr></thead><tbody>${list.length?list.map(e=>`<tr><td class="cell-nowrap">${dateNL(e.date)}</td><td class="cell-name"><strong title="${esc(e.vendor)}">${esc(e.vendor)}</strong><div class="help">${esc(e.notes||'')}</div></td><td class="cell-nowrap">${esc(e.invoiceNumber||'—')}</td><td>${esc(e.category)}</td><td class="cell-nowrap">${esc(e.paymentMethod||'—')}</td><td class="cell-nowrap">${esc(expenseVatRateLabel(e))}</td><td class="right money cell-nowrap">${money(e.exVat)}</td><td class="right money cell-nowrap">${money(expenseGross(e))}</td><td class="right financial-actions cell-nowrap"><button class="icon-btn" aria-label="Kostenacties" aria-haspopup="dialog" onclick="expenseActions('${e.id}')">${icon('i-more')}</button></td></tr>`).join(''):`<tr><td colspan="9">${listEmptyHtml('expenses','<button class="btn primary" onclick="newExpense()">Kosten boeken</button>')}</td></tr>`}</tbody></table></div></div>`
 }
 function renderBank(){
  const list=getListRows('bank'),balance=list.reduce((sum,t)=>roundMoney(sum+Number(t.amount||0)),0),unmatched=list.filter(t=>t.status==='unmatched').length,matched=list.filter(t=>t.status==='matched').length,income=list.filter(t=>Number(t.amount||0)>0).reduce((sum,t)=>roundMoney(sum+Number(t.amount||0)),0),out=list.filter(t=>Number(t.amount||0)<0).reduce((sum,t)=>roundMoney(sum+Math.abs(Number(t.amount||0))),0);
@@ -3576,7 +3607,7 @@ function renderBank(){
   productKpi('Te verwerken',String(unmatched),matched+' gekoppeld','i-check',unmatched?'warning':'success')
  ])}
  ${listToolbar('bank')}
- <div class="card table-card workspace-table"><div class="table-toolbar"><strong style="font-size:14px">Transacties</strong><button class="btn small" onclick="autoMatch()">Automatisch koppelen</button></div><div class="table-wrap mobile-stack-wrap"><table class="table financial-table mobile-stack-table mobile-bank"><thead><tr><th>Datum</th><th>Omschrijving</th><th>Status</th><th class="right">Bedrag</th><th></th></tr></thead><tbody>${list.length?list.map(t=>`<tr><td>${dateNL(t.date)}</td><td><strong>${esc(t.description)}</strong>${t.matchId?`<div class="help">${esc(listTransactionLinkText(t)||('Gekoppeld aan '+t.matchId))}</div>`:''}</td><td>${statusBadge(t.status)}</td><td class="right money" style="color:${t.amount<0?'var(--bad)':'var(--good)'}">${money(t.amount)}</td><td class="right financial-actions">${t.status==='unmatched'?`<button class="btn small" onclick="matchTransaction('${t.id}')">Koppelen</button>`:`<button class="link-btn" onclick="unmatchTransaction('${t.id}')">Ontkoppel</button>`}</td></tr>`).join(''):`<tr><td colspan="5">${listEmptyHtml('bank','<button class="btn primary" onclick="newTransaction()">Transactie toevoegen</button>')}</td></tr>`}</tbody></table></div></div>`
+ <div class="card table-card workspace-table"><div class="table-toolbar"><strong style="font-size:14px">Transacties</strong><button class="btn small" onclick="autoMatch()">Automatisch koppelen</button></div><div class="table-wrap mobile-stack-wrap"><table class="table financial-table mobile-stack-table mobile-bank"><thead><tr><th>Datum</th><th>Omschrijving</th><th>Status</th><th class="right">Bedrag</th><th></th></tr></thead><tbody>${list.length?list.map(t=>`<tr><td class="cell-nowrap">${dateNL(t.date)}</td><td class="cell-name"><strong title="${esc(t.description)}">${esc(t.description)}</strong>${t.matchId?`<div class="help">${esc(listTransactionLinkText(t)||('Gekoppeld aan '+t.matchId))}</div>`:''}</td><td class="cell-nowrap">${statusBadge(t.status)}</td><td class="right money cell-nowrap" style="color:${t.amount<0?'var(--bad)':'var(--good)'}">${money(t.amount)}</td><td class="right financial-actions cell-nowrap">${t.status==='unmatched'?`<button class="btn small" onclick="matchTransaction('${t.id}')">Koppelen</button>`:`<button class="icon-btn bank-unlink-action" type="button" aria-label="Ontkoppelen" title="Ontkoppelen" onclick="unmatchTransaction('${t.id}')">${icon('i-unlink')}<span class="bank-unlink-text">Ontkoppelen</span></button>`}</td></tr>`).join(''):`<tr><td colspan="5">${listEmptyHtml('bank','<button class="btn primary" onclick="newTransaction()">Transactie toevoegen</button>')}</td></tr>`}</tbody></table></div></div>`
 }
 function directionalBankRows(kind){return state.transactions.filter(t=>kind==='income'?Number(t.amount||0)>0:Number(t.amount||0)<0).slice().sort((a,b)=>String(b.date||'').localeCompare(String(a.date||'')))}
 function renderIncome(){
@@ -3629,7 +3660,7 @@ function renderReports(){const {from,to}=reportRange(),inv=state.invoices.filter
   productKpi('Winstmarge',margin+'%','Van omzet','i-chart',margin<0?'error':'primary')
  ])}
  <div class="card report-filterbar"><div class="report-shortcuts" aria-label="Periode"><button class="btn" onclick="setReportPreset('month')">Maand</button><button class="btn" onclick="setReportPreset('quarter')">Kwartaal</button><button class="btn" onclick="setReportPreset('year')">Jaar</button></div><div class="report-custom-range"><div class="field"><label>Van</label><input id="reportFrom" type="date" value="${from}"></div><div class="field"><label>Tot en met</label><input id="reportTo" type="date" value="${to}"></div></div></div>
- <div class="card report-result-card"><div class="section-head"><div><h2>Resultaat</h2><span class="section-meta">Omzet · Kosten · Winst</span></div></div><div class="chart report-result-chart" aria-label="Omzet, kosten en winst per maand">${chart.map(x=>`<div class="bar-group" aria-label="${esc(x.period)}: omzet ${esc(money(x.sales))}, kosten ${esc(money(x.costs))}, winst ${esc(money(x.profit))}"><span class="bar sales" style="height:${Math.max(3,Math.abs(x.sales)/max*100)}%"></span><span class="bar costs" style="height:${Math.max(3,Math.abs(x.costs)/max*100)}%"></span><span class="bar profit ${x.profit<0?'loss':''}" style="height:${Math.max(3,Math.abs(x.profit)/max*100)}%"></span><span class="bar-label">${esc(x.lab)}</span></div>`).join('')}</div><div class="chart-legend"><span><i class="legend-dot"></i>Omzet</span><span><i class="legend-dot cost"></i>Kosten</span><span><i class="legend-dot profit"></i>Winst</span></div></div>
+ <div class="card report-result-card"><div class="section-head"><div><h2>Resultaat</h2><span class="section-meta">Omzet · Kosten · Winst</span></div></div><div class="chart report-result-chart" aria-label="Omzet, kosten en winst per maand">${chart.map(x=>`<button type="button" class="bar-group" data-chart-values="${esc(JSON.stringify({month:x.period,sales:money(x.sales),costs:money(x.costs),profit:money(x.profit)}))}" aria-describedby="reportChartValues" aria-pressed="false" aria-label="${esc(x.period)}: omzet ${esc(money(x.sales))}, kosten ${esc(money(x.costs))}, winst ${esc(money(x.profit))}"><span class="bar sales" style="height:${Math.max(3,Math.abs(x.sales)/max*100)}%"></span><span class="bar costs" style="height:${Math.max(3,Math.abs(x.costs)/max*100)}%"></span><span class="bar profit ${x.profit<0?'loss':''}" style="height:${Math.max(3,Math.abs(x.profit)/max*100)}%"></span><span class="bar-label">${esc(x.lab)}</span></button>`).join('')}</div><div class="chart-values" id="reportChartValues" role="tooltip" hidden></div><div class="chart-legend"><span><i class="legend-dot"></i>Omzet</span><span><i class="legend-dot cost"></i>Kosten</span><span><i class="legend-dot profit"></i>Winst</span></div></div>
  <div class="grid grid-2 premium-grid"><div class="card"><div class="section-head"><div><h2>Winst & verlies</h2><span class="section-meta">${dateNL(from)} – ${dateNL(to)}</span></div></div><div class="summary-lines"><div class="total-line"><span>Omzet</span><strong>${money(sales)}</strong></div><div class="total-line"><span>Creditfacturen</span><strong>− ${money(credit)}</strong></div><div class="total-line"><span>Kosten</span><strong>− ${money(costs)}</strong></div><div class="total-line grand"><span>Winst</span><strong>${money(profit)}</strong></div></div></div><div class="card"><div class="section-head"><h2>Financiële positie</h2></div><div class="summary-lines"><div class="total-line"><span>Importsaldo</span><strong>${money(cash)}</strong></div><div class="total-line"><span>Openstaande facturen</span><strong>${money(ar)}</strong></div><div class="total-line"><span>Btw-positie</span><strong>${money(vat)}</strong></div></div><div class="help critical-help">Operationeel overzicht · geen formele jaarstukken.</div></div></div><div class="grid grid-2 premium-grid"><div class="card"><div class="section-head"><div><h2>Kosten per categorie</h2><span class="section-meta">Excl. btw</span></div></div>${Object.keys(cats).length?Object.entries(cats).sort((a,b)=>b[1]-a[1]).map(([k,v])=>`<div class="category-row"><div class="total-line"><span>${esc(k)}</span><strong>${money(v)}</strong></div><div class="progress"><span style="width:${costs?Math.round(v/costs*100):0}%"></span></div></div>`).join(''):'<div class="empty"><strong>Geen kosten in deze periode</strong></div>'}</div></div>`}
 
 function reportPresetRange(kind){const now=new Date(),y=now.getFullYear(),m=now.getMonth(),d=now.getDate(),iso=x=>`${x.getFullYear()}-${String(x.getMonth()+1).padStart(2,'0')}-${String(x.getDate()).padStart(2,'0')}`;let start;if(kind==='week'){const offset=(now.getDay()+6)%7;start=new Date(y,m,d-offset)}else if(kind==='month')start=new Date(y,m,1);else if(kind==='quarter')start=new Date(y,Math.floor(m/3)*3,1);else start=new Date(y,0,1);return {from:iso(start),to:iso(now)}}
@@ -3948,36 +3979,39 @@ function enhanceAppInterface(root){
 let dashboardChartController=null;
 function wireDashboardChart(){
  dashboardChartController?.abort();dashboardChartController=null;
- const buttons=[...document.querySelectorAll('[data-chart-values]')],output=document.getElementById('dashboardChartValues');if(!output)return;
- const controller=new AbortController();dashboardChartController=controller;const options={signal:controller.signal};
- const card=output.closest('.dashboard-chart-card'),chart=card.querySelector('.chart');let selected=null,pinned=false;
- const close=()=>{output.hidden=true;selected=null;pinned=false;buttons.forEach(button=>button.setAttribute('aria-pressed','false'))};
- const position=()=>{
-  if(!selected||output.hidden)return;
-  const bounds=card.getBoundingClientRect(),bars=[...selected.querySelectorAll('.bar')].map(el=>el.getBoundingClientRect()),anchor=selected.getBoundingClientRect(),tip=output.getBoundingClientRect(),topbar=document.querySelector('.topbar')?.getBoundingClientRect();
-  const minX=Math.max(bounds.left+8,8),maxX=Math.min(bounds.right-8,window.innerWidth-8)-tip.width;
-  const left=Math.max(minX,Math.min(maxX,anchor.left+anchor.width/2-tip.width/2));
-  const minY=Math.max(bounds.top+8,(card.querySelector('.section-head')?.getBoundingClientRect().bottom||bounds.top)+8,(topbar?.bottom||0)+8),maxY=Math.min(bounds.bottom-8,window.innerHeight-8)-tip.height;
-  const top=Math.max(minY,Math.min(maxY,Math.min(...bars.map(bar=>bar.top))-tip.height-8));
-  output.style.left=(left-bounds.left)+'px';output.style.top=(top-bounds.top)+'px';
- };
- const show=button=>{
-  selected=button;const values=JSON.parse(button.dataset.chartValues);output.replaceChildren();
-  const period=document.createElement('strong');period.className='chart-tooltip-period';period.textContent=values.month;
-  output.append(period);for(const [label,value] of [['Omzet',values.sales],['Kosten',values.costs],['Winst',values.profit]]){const row=document.createElement('span'),name=document.createElement('span'),amount=document.createElement('strong');name.textContent=label;amount.textContent=value;row.append(name,amount);output.append(row)}
-  output.hidden=false;buttons.forEach(el=>el.setAttribute('aria-pressed',String(el===button)));position();
- };
- buttons.forEach(button=>{
-  button.addEventListener('focus',()=>show(button),options);
-  button.addEventListener('pointerenter',event=>{if(event.pointerType!=='touch'&&!pinned)show(button)},options);
-  button.addEventListener('pointerleave',()=>{if(!pinned&&document.activeElement!==button)close()},options);
-  button.addEventListener('blur',()=>{if(!pinned)close()},options);
-  button.addEventListener('click',()=>{if(pinned&&selected===button){close();return}pinned=true;show(button)},options);
- });
- document.addEventListener('pointerdown',event=>{if(!chart.contains(event.target))close()},options);
- document.addEventListener('focusin',event=>{if(!chart.contains(event.target))close()},options);
- document.addEventListener('keydown',event=>{if(event.key==='Escape'&&!output.hidden){event.preventDefault();close()}},options);
- window.addEventListener('resize',position,options);window.addEventListener('scroll',position,{...options,capture:true});
+ const cards=[...document.querySelectorAll('.dashboard-chart-card,.report-result-card')].filter(card=>card.querySelector('[data-chart-values]')&&card.querySelector('.chart-values'));if(!cards.length)return;
+ const controller=new AbortController();dashboardChartController=controller;const options={signal:controller.signal},states=[];
+ for(const card of cards){
+  const buttons=[...card.querySelectorAll('[data-chart-values]')],output=card.querySelector('.chart-values'),chart=card.querySelector('.chart');let selected=null,pinned=false;
+  const close=()=>{output.hidden=true;selected=null;pinned=false;buttons.forEach(button=>button.setAttribute('aria-pressed','false'))};
+  const position=()=>{
+   if(!selected||output.hidden)return;
+   const bounds=card.getBoundingClientRect(),bars=[...selected.querySelectorAll('.bar')].map(el=>el.getBoundingClientRect()),anchor=selected.getBoundingClientRect(),tip=output.getBoundingClientRect(),topbar=document.querySelector('.topbar')?.getBoundingClientRect();
+   const minX=Math.max(bounds.left+8,8),maxX=Math.min(bounds.right-8,window.innerWidth-8)-tip.width;
+   const left=Math.max(minX,Math.min(maxX,anchor.left+anchor.width/2-tip.width/2));
+   const minY=Math.max(bounds.top+8,(card.querySelector('.section-head')?.getBoundingClientRect().bottom||bounds.top)+8,(topbar?.bottom||0)+8),maxY=Math.min(bounds.bottom-8,window.innerHeight-8)-tip.height;
+   const top=Math.max(minY,Math.min(maxY,Math.min(...bars.map(bar=>bar.top))-tip.height-8));
+   output.style.left=(left-bounds.left)+'px';output.style.top=(top-bounds.top)+'px';
+  };
+  const show=button=>{
+   selected=button;const values=JSON.parse(button.dataset.chartValues);output.replaceChildren();
+   const period=document.createElement('strong');period.className='chart-tooltip-period';period.textContent=values.month;
+   output.append(period);for(const [label,value] of [['Omzet',values.sales],['Kosten',values.costs],['Winst',values.profit]]){const row=document.createElement('span'),name=document.createElement('span'),amount=document.createElement('strong');name.textContent=label;amount.textContent=value;row.append(name,amount);output.append(row)}
+   output.hidden=false;buttons.forEach(el=>el.setAttribute('aria-pressed',String(el===button)));position();
+  };
+  buttons.forEach(button=>{
+   button.addEventListener('focus',()=>show(button),options);
+   button.addEventListener('pointerenter',event=>{if(event.pointerType!=='touch'&&!pinned)show(button)},options);
+   button.addEventListener('pointerleave',()=>{if(!pinned&&document.activeElement!==button)close()},options);
+   button.addEventListener('blur',()=>{if(!pinned)close()},options);
+   button.addEventListener('click',()=>{if(pinned&&selected===button){close();return}pinned=true;show(button)},options);
+  });
+  states.push({card,chart,output,close,position});
+  window.addEventListener('resize',position,options);window.addEventListener('scroll',position,{...options,capture:true});
+ }
+ document.addEventListener('pointerdown',event=>states.forEach(state=>{if(!state.chart.contains(event.target))state.close()}),options);
+ document.addEventListener('focusin',event=>states.forEach(state=>{if(!state.chart.contains(event.target))state.close()}),options);
+ document.addEventListener('keydown',event=>{if(event.key==='Escape'&&states.some(state=>!state.output.hidden)){event.preventDefault();states.forEach(state=>state.close())}},options);
 }
 function wireControlSearch(){
  const input=document.getElementById('controlSearch');if(!input)return;
